@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+.build-deps/
+.codex-remote-attachments/
+downloads/
+dist/
+*.ipk
+*.log
+*.pid
+*.bak
+*backup*/
+config.local.yml
+whatsapp-addon-state.json
+.DS_Store
