@@ -1,0 +1,13 @@
+{
+  "project": "https://github.com/joyanhui/ikuai-bypass",
+  "author": "joyanhui",
+  "tag": "ikuai-bypass-v4.4.110",
+  "commit": "aba8d1ccf57194e7e33f5967a7a6cf9b61e01f89",
+  "license": "AGPL-3.0",
+  "binary_url": "https://github.com/joyanhui/ikuai-bypass/releases/download/ikuai-bypass-v4.4.110/ikuai-bypass-cli-linux-x86_64.zip",
+  "binary_archive_sha256": "d0029b15a2f961a39e758cdccf40c13b3f65689740cfe7c7c4ffd805f7357060",
+  "binary_sha256": "3c6ccc9980aa9091615ef5247ccd2e5c3796b7facaba0726d73d25ef303afd27",
+  "source_archive": "ikuai-bypass-v4.4.110-source.tar.gz",
+  "source_sha256": "81117875f4313bfc9d0fbf015cc25b62fb18ea8307c708b864f1076cab424b1b",
+  "source_scope": "Rust workspace, applications, frontend, Cargo lock, scripts, CI, configuration and license; excludes unrelated historical Go binaries, VM images and screenshots"
+}
