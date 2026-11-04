@@ -60,3 +60,7 @@ MYDIRECT 等直连规则应填写直连 WAN，GFW/MYBYPASS 填代理出口 WAN�
 ## 批量部署
 
 分发同一个 IPK，每台单独填写爱快地址/账号、WAN、源分组与 DHCP 范围。首次安装的模板不包含现场密码。不要把已配置机器的完整 YAML 公开放进仓库；也不要把一台路由器的附加功能状态文件直接用于另一台爱快。
+
+## Telegram / ChatGPT 应用增强
+
+不要仅把 GFW 域名规则等同于所有客户端完整覆盖。4.4.110-10 起可在独立页面开启 Telegram IPv4 规则、ChatGPT 域名补全及 DNS 入口保护。它们跟随所选域名规则的 WAN 和源范围，详见 [应用增强](applications.md)。

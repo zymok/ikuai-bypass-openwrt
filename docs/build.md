@@ -61,10 +61,11 @@ WhatsApp 事务测试依赖 Linux 的 `fcntl/flock`，Windows 会跳过。真实
 
 ```sh
 python3 tests/core_download_failure_probe.py --guard
+python3 tests/core_applications_probe.py --cron
 python3 tests/core_download_failure_probe.py --guard --cron
 ```
 
-模拟服务器和下载地址均为 `127.0.0.1`，临时配置不指向现网爱快；不会拿生产规则做清空测试。缺少受保护包装器时不能把测试“没运行起来”误当作通过。
+模拟服务器和下载地址均为 `127.0.0.1`，临时配置不指向现网爱快；不会拿生产规则做清空测试。新增应用探针验证生成规则、WAN 切换不重复、空应用订阅保留旧规则和关闭后不再更新。所有探针清除现场附加设置，并使用非生产配置路径，避免触发本机网络设置。缺少受保护包装器时不能把测试“没运行起来”误当作通过。
 
 ## 重新发布
 

@@ -31,3 +31,7 @@
 ## 应把问题提交给谁
 
 本包的 LuCI、包装、订阅保护和附加功能问题提交到本仓库。底层核心行为先参考[原作者文档](https://joyanhui.github.io/ikuai-bypass/)，复现时注明使用了非官方包装版。提交日志前删除密码、私有链接、IP、会话和配置备份。
+
+## Telegram 正常而 ChatGPT 仍失败，或仅手机客户端失败
+
+检查 Telegram IP 分流、ChatGPT 附属域名和实际 DNS 链路，不只检查主站。若本机 DNS 正常而转发的公共 DNS 查询直接放行，终端可能连接到错误 IP；可按 [应用增强](applications.md) 配置 DNS 入口保护。网页 403 验证、DNS 错误和连接超时应分别判断。
