@@ -59,6 +59,8 @@ threading.Thread(target=server.serve_forever, daemon=True).start()
 base = 'http://127.0.0.1:' + str(server.server_port)
 with tempfile.TemporaryDirectory(prefix='ikb-failure-probe-') as directory:
     cfg = yaml.safe_load(Path('/etc/ikuai-bypass/config.yml').read_text())
+    cfg.pop('openwrt-addons', None)
+    cfg.setdefault('webui', {})['enable'] = False
     cfg.update({'ikuai-url': base, 'username': 'mock', 'password': 'mock', 'github-proxy': '', 'mode': 'ispdomain', 'run-mode': 'once', 'AddWait': '1ms', 'AddErrRetryWait': '1ms'})
     cfg['proxy'] = {'mode': 'system', 'url': ''}
     for key in ('custom-isp', 'ip-group', 'ipv6-group', 'stream-ipport'):
