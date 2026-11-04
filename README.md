@@ -1,6 +1,6 @@
 # iKuai Bypass for OpenWrt
 
-![OpenWrt](https://img.shields.io/badge/OpenWrt-LuCI-00a6d2) ![Architecture](https://img.shields.io/badge/arch-x86__64-blue) ![Package](https://img.shields.io/badge/IPK-4.4.110--9-brightgreen) ![License](https://img.shields.io/badge/license-AGPL--3.0-blue)
+![OpenWrt](https://img.shields.io/badge/OpenWrt-LuCI-00a6d2) ![Architecture](https://img.shields.io/badge/arch-x86__64-blue) ![Package](https://img.shields.io/badge/IPK-4.4.110--10-brightgreen) ![License](https://img.shields.io/badge/license-AGPL--3.0-blue)
 
 **在 OpenWrt 的 LuCI 界面中管理爱快分流规则、订阅链接和更新计划。** 集成上游核心、中文配置界面、WhatsApp 可选附加功能及订阅更新保护，提供可直接安装的 IPK。
 
@@ -13,10 +13,12 @@
 | [下载最新版本](https://github.com/zymok/ikuai-bypass-openwrt/releases/latest) | IPK、SHA-256、源码归档 |
 | [安装与升级](docs/install.md) | 兼容环境、安装、覆盖升级、卸载 |
 | [配置与日常操作](docs/configuration.md) | 账号、规则链接、出口、源分组、运行模式、计划与日志 |
+| [Telegram / ChatGPT 应用增强](docs/applications.md) | 自动跟随 WAN/源分组、Telegram IP、ChatGPT 域名、DNS 防泄漏 |
 | [WhatsApp 附加功能](docs/whatsapp.md) | 跟随 WAN、线路 DNS、可选 DHCP、Android 注意事项 |
 | [订阅更新保护](docs/subscription-guard.md) | 下载失败与空列表保护、适用范围和边界 |
 | [常见问题](docs/faq.md) | 依赖、500 页面、DNS 与访问排查 |
 | [源码构建](docs/build.md) | 固定上游版本、依赖来源、测试与打包 |
+| [测试记录](docs/testing.md) | 本版测试场景与验证边界 |
 | [版本记录](CHANGELOG.md) | 核心版本与安装包修订的区别 |
 | [原作者完整文档](https://joyanhui.github.io/ikuai-bypass/) | 上游设计、配置及核心功能说明 |
 
@@ -25,6 +27,7 @@
 - **中文 LuCI 管理：** 表单编辑账号、代理、订阅、WAN、源地址组、下一跳、协议、运行模式与更新计划，也可编辑完整 YAML。
 - **订阅预设：** GFW、MYBYPASS、MYDIRECT、国内 IP、Telegram、Google、IPv6 等；默认展示已保存链接，可自行修改或添加规则。
 - **日常操作：** 登录测试、订阅连接测试、单次同步、启动/停止、开机启动、日志、按 tag 清理、域名导出、配置备份与恢复。
+- **Telegram / ChatGPT 增强：** 可选自动生成完整应用规则，随计划更新；支持 DNS 入口防泄漏及 PassWall2 TCP 端口管理。
 - **WhatsApp 附加功能：** 可选启用，出口和源地址组自动跟随指定域名规则；分别选择线路 DNS 和 DHCP 下发 DNS，不修改爱快全局主备 DNS。
 - **订阅更新保护：** 下载并校验列表后才交给核心更新。下载失败、空列表、错误页、非法内容或明确的响应截断会被拒绝，保留对应旧规则；手动更新和定时服务均覆盖。
 - **便于批量部署：** IPK 包含核心和 YAML 纯 Python 依赖；每台路由器自行填写账号、出口与源分组，安装包不包含现场密码。
@@ -47,7 +50,7 @@
 
 ```sh
 opkg update
-opkg install /tmp/luci-app-ikuai-bypass_4.4.110-9_x86_64.ipk
+opkg install /tmp/luci-app-ikuai-bypass_4.4.110-10_x86_64.ipk
 ```
 
 进入 **LuCI → 服务 → iKuai Bypass**：
@@ -57,11 +60,11 @@ opkg install /tmp/luci-app-ikuai-bypass_4.4.110-9_x86_64.ipk
 3. 保持定时服务停止，点击“立即更新一次”，确认日志和爱快规则更新成功。
 4. 选择更新计划，保存，开启自启并启动服务。修改配置后重启服务。
 
-首次安装默认不启动同步，爱快密码为空。不要未经核对直接启用示例规则。完整步骤见[安装说明](docs/install.md)。
+首次安装默认不启动同步，爱快密码为空，应用增强默认关闭。不要未经核对直接启用示例规则。完整步骤见[安装说明](docs/install.md)。
 
 ## 版本与更新保护
 
-当前安装包版本 **4.4.110-9**：`4.4.110` 是上游核心版本，末尾 `-9` 是本项目的 OpenWrt 安装包修订号，不表示上游发布了同名版本。
+当前安装包版本 **4.4.110-10**：`4.4.110` 是上游核心版本，末尾 `-10` 是本项目的 OpenWrt 安装包修订号，不表示上游发布了同名版本。
 
 更新保护按订阅生效，并非爱快写入事务：一个订阅失败时保留它的旧规则，其他正常订阅仍可更新。**不保证爱快写入中途失败的完整回滚**，也不能识别所有语法正确但内容错误的非空列表。详见[保护说明及测试](docs/subscription-guard.md)。
 

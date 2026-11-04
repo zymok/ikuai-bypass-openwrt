@@ -11,7 +11,7 @@
 
 ## 本项目修改
 
-维护账号：[zymok](https://github.com/zymok)。修改内容为 Lua LuCI 控制器与表单、配置操作辅助程序、IPK 打包、procd 集成、WhatsApp 附加配置、订阅保护、测试及文档。修改日期见 `CHANGELOG.md`。
+维护账号：[zymok](https://github.com/zymok)。修改内容为 Lua LuCI 控制器与表单、配置操作辅助程序、IPK 打包、procd 集成、WhatsApp 附加配置、Telegram/ChatGPT 应用增强、DNS 入口与端口管理、订阅保护、测试及文档。修改日期见 `CHANGELOG.md`。
 
 本仓库为非官方增强版，不是 joyanhui 的官方客户端分支或官方发布。保留原项目名称用于说明兼容性和来源，不表示原作者认可或承担本修改版的维护责任。
 

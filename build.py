@@ -6,7 +6,7 @@ import tarfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-VERSION = '4.4.110-9'
+VERSION = '4.4.110-10'
 
 def archive(files):
     out = io.BytesIO()
@@ -44,6 +44,7 @@ files = {
     'usr/bin/ikuai-bypass': (binary, 0o755),
     'usr/libexec/ikuai-bypass-guard': (text('package/guard-runner.py'), 0o755),
     'usr/libexec/ikuai-bypass-python/ikb_subscription_guard.py': (text('package/subscription_guard.py'), 0o644),
+    'usr/libexec/ikuai-bypass-python/ikb_applications.py': (text('package/applications.py'), 0o644),
     'usr/libexec/ikuai-bypass-config': (text('package/config-helper.py'), 0o755),
     'usr/libexec/ikuai-bypass-operations': (text('package/operations.py'), 0o755),
     'etc/init.d/ikuai-bypass': (text('package/ikuai-bypass.init'), 0o755),
