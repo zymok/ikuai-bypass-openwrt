@@ -1,0 +1,546 @@
+{
+  "settings": [
+    {
+      "path": "AddErrRetryWait",
+      "label": "失败重试间隔",
+      "default": "10s",
+      "help": "例如 10s、2m；规则添加失败后的重试等待时间。"
+    },
+    {
+      "path": "AddWait",
+      "label": "规则添加等待时间",
+      "default": "1s",
+      "help": "例如 1s；留出爱快处理规则的时间。"
+    },
+    {
+      "path": "proxy.mode",
+      "label": "网络代理模式",
+      "default": "smart",
+      "choices": [
+        [
+          "smart",
+          "智能：规则下载优先使用 GitHub 前缀代理"
+        ],
+        [
+          "custom",
+          "自定义：所有外部请求使用下面的代理"
+        ],
+        [
+          "system",
+          "系统：使用系统环境代理"
+        ]
+      ]
+    },
+    {
+      "path": "proxy.url",
+      "label": "HTTP／HTTPS 代理地址",
+      "default": "",
+      "help": "例如 http://192.168.1.2:7890；与 GitHub 下载代理前缀不同。"
+    },
+    {
+      "path": "proxy.user",
+      "label": "代理用户名",
+      "default": ""
+    },
+    {
+      "path": "proxy.pass",
+      "label": "代理密码",
+      "default": "",
+      "secret": true
+    },
+    {
+      "path": "webui.enable",
+      "label": "启用上游独立 WebUI",
+      "type": "bool",
+      "default": false,
+      "help": "启用并重启后，通过路由器 IP 和下面的端口访问上游完整 WebUI。"
+    },
+    {
+      "path": "webui.port",
+      "label": "独立 WebUI 端口",
+      "default": "19001"
+    },
+    {
+      "path": "webui.user",
+      "label": "独立 WebUI 用户名",
+      "default": "admin"
+    },
+    {
+      "path": "webui.pass",
+      "label": "独立 WebUI 密码",
+      "default": "",
+      "secret": true
+    },
+    {
+      "path": "webui.cdn-prefix",
+      "label": "WebUI CDN 前缀",
+      "default": "https://cdn.jsdelivr.net/npm"
+    },
+    {
+      "path": "MaxNumberOfOneRecords.Isp",
+      "label": "每条运营商规则的 IP 数量上限",
+      "type": "int",
+      "default": 5000
+    },
+    {
+      "path": "MaxNumberOfOneRecords.Ipv4",
+      "label": "每条 IPv4 分组的地址数量上限",
+      "type": "int",
+      "default": 2450
+    },
+    {
+      "path": "MaxNumberOfOneRecords.Ipv6",
+      "label": "每条 IPv6 分组的地址数量上限",
+      "type": "int",
+      "default": 1600
+    },
+    {
+      "path": "MaxNumberOfOneRecords.Domain",
+      "label": "每条域名规则的域名数量上限",
+      "type": "int",
+      "default": 3000
+    },
+    {
+      "path": "openwrt-addons.whatsapp.enabled",
+      "label": "启用 WhatsApp 附加功能",
+      "default": false,
+      "help": "保存后先预览，再点击同步或重启服务；关闭后同步可恢复接管前规则。",
+      "tab": "addons",
+      "type": "bool"
+    },
+    {
+      "path": "openwrt-addons.whatsapp.anchor-tag",
+      "label": "跟随域名规则标识",
+      "default": "gfw",
+      "help": "自动跟随此规则的 WAN 出口与源地址组，不需要重复填写 WAN2／WAN5。",
+      "tab": "addons"
+    },
+    {
+      "path": "openwrt-addons.whatsapp.adopt-existing",
+      "label": "接管已有 WhatsApp 三域名规则",
+      "default": false,
+      "help": "已有同名用途规则时先核对，再开启接管；关闭功能会恢复原规则。",
+      "tab": "addons",
+      "type": "bool"
+    },
+    {
+      "path": "openwrt-addons.whatsapp.line-dns-enabled",
+      "label": "配置所选 WAN 的多线路 DNS",
+      "default": false,
+      "help": "仅修改所选 WAN 的 DNS；不修改爱快全局主备 DNS。",
+      "tab": "addons",
+      "type": "bool"
+    },
+    {
+      "path": "openwrt-addons.whatsapp.line-dns",
+      "label": "线路 DNS 地址",
+      "default": "",
+      "help": "留空自动读取本机 LAN 地址，例如 192.168.88.1；确认本机 DNS 可用后启用。",
+      "tab": "addons"
+    },
+    {
+      "path": "openwrt-addons.whatsapp.line-dns-backup",
+      "label": "线路备用 DNS",
+      "default": "8.8.8.8",
+      "help": "",
+      "tab": "addons"
+    },
+    {
+      "path": "openwrt-addons.whatsapp.dhcp-enabled",
+      "label": "同步源网段 DHCP 下发 DNS",
+      "default": false,
+      "help": "仅修改匹配的 DHCP 地址池；客户端续租后生效。固定 DNS 终端需手动设置。",
+      "tab": "addons",
+      "type": "bool"
+    },
+    {
+      "path": "openwrt-addons.whatsapp.client-dns1",
+      "label": "客户端主 DNS",
+      "default": "119.29.29.29",
+      "help": "",
+      "tab": "addons"
+    },
+    {
+      "path": "openwrt-addons.whatsapp.client-dns2",
+      "label": "客户端备用 DNS",
+      "default": "223.5.5.5",
+      "help": "",
+      "tab": "addons"
+    },
+    {
+      "path": "openwrt-addons.whatsapp.dhcp-scope-ids",
+      "label": "DHCP 范围 ID（可选）",
+      "default": "",
+      "help": "留空自动匹配源地址范围；填写多个 ID 用逗号分隔，先预览确认。",
+      "tab": "addons"
+    },
+    {
+      "path": "openwrt-addons.whatsapp.diagnostic-ip",
+      "label": "诊断终端 IPv4 地址",
+      "default": "",
+      "help": "Android 私人 DNS 必须明确选择关闭；自动模式可能绕过域名分流。",
+      "tab": "addons"
+    }
+  ],
+  "groups": [
+    {
+      "key": "custom-isp",
+      "label": "自定义运营商 IP 订阅",
+      "help": "把 IP 列表同步到爱快自定义运营商；实际线路分配由爱快管理。",
+      "fields": [
+        {
+          "key": "tag",
+          "label": "规则标识",
+          "default": "NewISP"
+        },
+        {
+          "key": "url",
+          "label": "订阅链接",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "key": "stream-domain",
+      "label": "域名分流",
+      "help": "按域名选择爱快外网线路；网口名称需与爱快一致，如 wan1、wan2。",
+      "fields": [
+        {
+          "key": "tag",
+          "label": "规则标识",
+          "default": "NewDomain"
+        },
+        {
+          "key": "url",
+          "label": "域名订阅链接",
+          "default": ""
+        },
+        {
+          "key": "interface",
+          "label": "分流网口／线路",
+          "default": "wan2"
+        },
+        {
+          "key": "src-addr",
+          "label": "源地址／范围",
+          "default": "192.168.1.10-192.168.1.254"
+        },
+        {
+          "key": "src-addr-opt-ipgroup",
+          "label": "源地址 IP 分组",
+          "default": "",
+          "help": "填写后优先于源地址；多个分组用逗号分隔。"
+        }
+      ]
+    },
+    {
+      "key": "ip-group",
+      "label": "IPv4 分组订阅",
+      "help": "同步 IPv4 分组，可在端口分流中按名称引用。",
+      "fields": [
+        {
+          "key": "tag",
+          "label": "分组标识",
+          "default": "NewIPv4"
+        },
+        {
+          "key": "url",
+          "label": "IP 订阅链接",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "key": "ipv6-group",
+      "label": "IPv6 分组订阅",
+      "help": "同步 IPv6 分组；订阅可包含混合地址，核心按地址类型处理。",
+      "fields": [
+        {
+          "key": "tag",
+          "label": "分组标识",
+          "default": "NewIPv6"
+        },
+        {
+          "key": "url",
+          "label": "IP 订阅链接",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "key": "stream-ipport",
+      "label": "端口分流／下一跳网关",
+      "help": "外网线路方式填写网口；下一跳方式填写旁路由 IP。线路和源地址均来自爱快网络配置。",
+      "fields": [
+        {
+          "key": "opt-tagname",
+          "label": "规则名称",
+          "default": "NewRoute"
+        },
+        {
+          "key": "type",
+          "label": "分流方式",
+          "default": "0",
+          "choices": [
+            [
+              "0",
+              "外网线路"
+            ],
+            [
+              "1",
+              "下一跳网关（旁路由 IP）"
+            ]
+          ]
+        },
+        {
+          "key": "interface",
+          "label": "外网线路／网口",
+          "default": "wan1"
+        },
+        {
+          "key": "nexthop",
+          "label": "下一跳／旁路由 IP",
+          "default": ""
+        },
+        {
+          "key": "src-addr",
+          "label": "源地址／范围",
+          "default": "192.168.1.10-192.168.1.254"
+        },
+        {
+          "key": "src-addr-opt-ipgroup",
+          "label": "源地址 IP 分组",
+          "default": ""
+        },
+        {
+          "key": "src-addr-inv",
+          "label": "反向匹配源地址",
+          "type": "int",
+          "default": 0,
+          "choices": [
+            [
+              "0",
+              "关闭"
+            ],
+            [
+              "1",
+              "开启：匹配源地址以外的设备"
+            ]
+          ]
+        },
+        {
+          "key": "ip-group",
+          "label": "目的 IPv4 分组",
+          "default": "",
+          "help": "引用 IPv4 分组标识；多个分组用逗号分隔。"
+        },
+        {
+          "key": "dst-addr-inv",
+          "label": "反向匹配目的地址",
+          "type": "int",
+          "default": 0,
+          "choices": [
+            [
+              "0",
+              "关闭"
+            ],
+            [
+              "1",
+              "开启：匹配目的分组以外的地址"
+            ]
+          ]
+        },
+        {
+          "key": "prio",
+          "label": "优先级",
+          "type": "int",
+          "default": 0
+        },
+        {
+          "key": "mode",
+          "label": "负载模式",
+          "type": "int",
+          "default": 6,
+          "choices": [
+            [
+              "0",
+              "新建连接数"
+            ],
+            [
+              "1",
+              "源 IP"
+            ],
+            [
+              "2",
+              "源 IP＋源端口"
+            ],
+            [
+              "3",
+              "源 IP＋目的 IP"
+            ],
+            [
+              "4",
+              "源 IP＋目的 IP＋目的端口"
+            ],
+            [
+              "5",
+              "主备：爱快旧版本"
+            ],
+            [
+              "6",
+              "主备：爱快 4.0.210 及以后"
+            ]
+          ]
+        },
+        {
+          "key": "ifaceband",
+          "label": "线路绑定",
+          "type": "int",
+          "default": 0,
+          "choices": [
+            [
+              "0",
+              "不绑定"
+            ],
+            [
+              "1",
+              "绑定线路"
+            ]
+          ]
+        },
+        {
+          "key": "protocol",
+          "label": "通信协议",
+          "default": "tcp+udp",
+          "choices": [
+            [
+              "tcp+udp",
+              "TCP 与 UDP"
+            ],
+            [
+              "tcp",
+              "仅 TCP"
+            ],
+            [
+              "udp",
+              "仅 UDP"
+            ],
+            [
+              "icmp",
+              "仅 ICMP"
+            ],
+            [
+              "any",
+              "任意协议"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "id": "gfw",
+      "label": "GFW 域名 → 示例旁路由线路 wan2",
+      "group": "stream-domain",
+      "fields": {
+        "tag": "gfw",
+        "url": "https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/gfw.txt",
+        "interface": "wan2"
+      }
+    },
+    {
+      "id": "mybypass",
+      "label": "MYBYPASS 域名 → 示例旁路由线路 wan2",
+      "group": "stream-domain",
+      "fields": {
+        "tag": "MyBypass",
+        "url": "https://raw.githubusercontent.com/joyanhui/ikuai-bypass/main/private/bypass-domain-list.txt",
+        "interface": "wan2"
+      }
+    },
+    {
+      "id": "mydirect",
+      "label": "MYDIRECT 域名 → 示例直连线路 wan1",
+      "group": "stream-domain",
+      "fields": {
+        "tag": "MyDirect",
+        "url": "https://raw.githubusercontent.com/joyanhui/ikuai-bypass/main/private/direct-domain-list.txt",
+        "interface": "wan1"
+      }
+    },
+    {
+      "id": "china-domain",
+      "label": "国内域名 → 示例直连线路 wan1（列表较大，按需添加）",
+      "group": "stream-domain",
+      "fields": {
+        "tag": "MyChina",
+        "url": "https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/refs/heads/release/china-list.txt",
+        "interface": "wan1"
+      }
+    },
+    {
+      "id": "cn-isp",
+      "label": "国内 IP → 自定义运营商",
+      "group": "custom-isp",
+      "fields": {
+        "tag": "国内IP列表",
+        "url": "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt"
+      }
+    },
+    {
+      "id": "telegram-isp",
+      "label": "Telegram IP → 自定义运营商",
+      "group": "custom-isp",
+      "fields": {
+        "tag": "telegram",
+        "url": "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/telegram.txt"
+      }
+    },
+    {
+      "id": "google-isp",
+      "label": "Google IP → 自定义运营商",
+      "group": "custom-isp",
+      "fields": {
+        "tag": "google",
+        "url": "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/google.txt"
+      }
+    },
+    {
+      "id": "cn-v4",
+      "label": "国内 IP → IPv4 分组",
+      "group": "ip-group",
+      "fields": {
+        "tag": "国内",
+        "url": "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt"
+      }
+    },
+    {
+      "id": "telegram-v4",
+      "label": "Telegram IP → IPv4 分组",
+      "group": "ip-group",
+      "fields": {
+        "tag": "Telegram",
+        "url": "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/telegram.txt"
+      }
+    },
+    {
+      "id": "google-v4",
+      "label": "Google IP → IPv4 分组",
+      "group": "ip-group",
+      "fields": {
+        "tag": "Google",
+        "url": "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/google.txt"
+      }
+    },
+    {
+      "id": "cn-v6",
+      "label": "国内 IPv6 → IPv6 分组",
+      "group": "ipv6-group",
+      "fields": {
+        "tag": "国内v6",
+        "url": "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt"
+      }
+    }
+  ]
+}
