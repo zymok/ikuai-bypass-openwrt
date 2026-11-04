@@ -15,6 +15,17 @@ from urllib.request import ProxyHandler, build_opener
 import yaml
 
 LIMIT = 32 * 1024 * 1024
+RUN_LOCK = Path('/tmp/ikuai-bypass-run.lock')
+
+
+def running():
+    import fcntl
+    with RUN_LOCK.open('a') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return True
+    return False
 
 
 def external_opener(cfg, url):
@@ -144,6 +155,18 @@ class Guard:
 
 
 def run(config, args, binary='/usr/bin/ikuai-bypass'):
+    if Path(config).resolve() == Path('/etc/ikuai-bypass/config.yml'):
+        import fcntl
+        with RUN_LOCK.open('a') as lock:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                raise ValueError('Another service or task is starting/running; stop it first')
+            return _run(config, args, binary)
+    return _run(config, args, binary)
+
+
+def _run(config, args, binary):
     cfg = yaml.safe_load(Path(config).read_text(encoding='utf-8'))
     from ikb_applications import prepare, settings, sync_dns, sync_proxy_ports
     original = cfg

@@ -24,7 +24,7 @@ EXPORT = Path('/tmp/ikuai-bypass-domains.tar.gz')
 def reply(ok, message):
     print(json.dumps({'ok': ok, 'message' if ok else 'error': message}, ensure_ascii=False))
 
-from ikb_subscription_guard import external_opener
+from ikb_subscription_guard import external_opener, running as guard_running
 
 
 def worker(action, fd, tag):
@@ -56,7 +56,7 @@ def worker(action, fd, tag):
     handle.close()
 
 def start(action, tag):
-    if subprocess.run(['pidof', 'ikuai-bypass'], stdout=subprocess.DEVNULL).returncode == 0:
+    if subprocess.run(['pidof', 'ikuai-bypass'], stdout=subprocess.DEVNULL).returncode == 0 or guard_running():
         raise ValueError('请先停止定时服务，再执行单次任务，避免规则同步冲突。')
     fd = os.open(LOCK, os.O_CREAT | os.O_RDWR, 0o600)
     try:
