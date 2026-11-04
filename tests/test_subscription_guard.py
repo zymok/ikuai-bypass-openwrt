@@ -1,5 +1,8 @@
 import importlib.util
 import unittest
+import os
+import tempfile
+from unittest.mock import patch
 from pathlib import Path
 
 spec = importlib.util.spec_from_file_location('guard', Path(__file__).resolve().parents[1] / 'package/subscription_guard.py')
@@ -8,6 +11,23 @@ spec.loader.exec_module(guard)
 
 
 class GuardTest(unittest.TestCase):
+    @unittest.skipIf(os.name == 'nt', 'Real flock requires Linux/OpenWrt')
+    def test_canonical_run_locked_before_core_start(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(guard, 'RUN_LOCK', Path(directory) / 'run.lock'):
+            def work(*args):
+                self.assertTrue(guard.running())
+                with self.assertRaises(ValueError):
+                    guard.run('/etc/ikuai-bypass/config.yml', [])
+                return 0
+            with patch.object(guard, '_run', side_effect=work):
+                self.assertEqual(guard.run('/etc/ikuai-bypass/config.yml', []), 0)
+            self.assertFalse(guard.running())
+
+    def test_nonproduction_run_does_not_touch_production_lock(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(guard, 'RUN_LOCK', Path(directory) / 'run.lock'), patch.object(guard, '_run', return_value=0):
+            self.assertEqual(guard.run('/tmp/mock-config.yml', []), 0)
+            self.assertFalse(guard.RUN_LOCK.exists())
+
     def test_invalid_lists(self):
         for value in (b'', b'# comment\n', b'<html>Error</html>', b'error message', b'good.example.com\n<html>bad</html>', b'\xff'):
             with self.subTest(value=value), self.assertRaises((ValueError, UnicodeError)):
