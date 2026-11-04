@@ -125,3 +125,15 @@ openwrt-addons:
     client-dns2: "223.5.5.5"
     dhcp-scope-ids: ""
     diagnostic-ip: ""
+  applications:
+    telegram-enabled: false
+    chatgpt-enabled: false
+    anchor-tag: "gfw"
+    telegram-url: "https://core.telegram.org/resources/cidr.txt"
+    chatgpt-url: "https://raw.githubusercontent.com/zymok/ikuai-bypass-openwrt/main/rules/chatgpt-domain-list.txt"
+    dns-enabled: false
+    dns-zone: "lan"
+    dns-port: 53
+    passwall2-tcp-all: false
+    adopt-existing: false
+    diagnostic-ip: ""

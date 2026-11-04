@@ -15,6 +15,7 @@ section.cfgvalue = function() return true end
 section:tab('basic', '基本设置')
 section:tab('advanced', '代理与高级参数')
 section:tab('runtime', '运行与日志')
+section:tab('applications', 'Telegram / ChatGPT', '默认关闭。先保存设置并预览，停止定时服务后立即同步，再启动服务。应用规则在运行时生成并随计划更新，不会覆盖普通规则表单或启用未选模块的示例规则。关闭应用开关不会自动删除已同步的爱快规则；可在运行与日志按 TGClient／ChatGPT 清理。')
 section:tab('addons', 'WhatsApp 附加功能', '跟随域名规则的出口与源地址组。先保存设置，再预览或同步。Android 私人 DNS 请明确选择关闭；不自动修改终端设置。')
 section:tab('yaml', '完整 YAML')
 for _, group in ipairs((result.schema or {}).groups or {}) do section:tab(group.key, group.label, group.help) end
@@ -128,7 +129,7 @@ local function value_of(option, spec)
 end
 local settings = {}
 for _, spec in ipairs((result.schema or {}).settings or {}) do
-    if spec.path == 'openwrt-addons.whatsapp.anchor-tag' then
+    if spec.path == 'openwrt-addons.whatsapp.anchor-tag' or spec.path == 'openwrt-addons.applications.anchor-tag' then
         spec.choices = {}
         for _, rule in ipairs((result.rules or {})['stream-domain'] or {}) do
             spec.choices[#spec.choices + 1] = {rule.tag, rule.tag .. '（出口 ' .. (rule.interface or '') .. '）'}
@@ -175,8 +176,8 @@ local remote_button = section:taboption('yaml', Button, '_op_fetch', '载入远�
 remote_button.inputtitle = '载入并预览'
 remote_button.write = function() return true end
 local operations = {}
-for _, entry in ipairs({{'login', '测试爱快登录'}, {'proxy', '测试规则下载代理'}, {'once', '立即更新一次'}, {'export', '导出域名列表'}, {'cancel', '停止后台单次任务'}, {'whatsapp-preview', '预览 WhatsApp 同步范围'}, {'whatsapp-sync', '同步 WhatsApp 配置'}, {'whatsapp-diagnose', '诊断 WhatsApp 终端连接'}}) do
-    local button = section:taboption(entry[1]:match('^whatsapp%-') and 'addons' or 'runtime', Button, '_op_' .. entry[1], entry[2])
+for _, entry in ipairs({{'login', '测试爱快登录'}, {'proxy', '测试规则下载代理'}, {'once', '立即更新一次'}, {'export', '导出域名列表'}, {'cancel', '停止后台单次任务'}, {'whatsapp-preview', '预览 WhatsApp 同步范围'}, {'whatsapp-sync', '同步 WhatsApp 配置'}, {'whatsapp-diagnose', '诊断 WhatsApp 终端连接'}, {'apps-preview', '预览应用增强计划'}, {'apps-sync', '立即同步（含应用规则）'}, {'apps-diagnose', '诊断 Telegram / ChatGPT 连接'}}) do
+    local button = section:taboption(entry[1]:match('^apps%-') and 'applications' or entry[1]:match('^whatsapp%-') and 'addons' or 'runtime', Button, '_op_' .. entry[1], entry[2])
     button.inputtitle = entry[2]
     button.write = function() return true end
     operations[entry[1]] = button

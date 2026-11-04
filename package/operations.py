@@ -41,7 +41,7 @@ def worker(action, fd, tag):
             elif action == 'export':
                 EXPORT.unlink(missing_ok=True)
                 with tempfile.TemporaryDirectory(prefix='ikuai-bypass-export-') as folder:
-                    command += ['-r', 'exportDomainSteamToTxt', '--exportPath', folder]
+                    command = ['/usr/libexec/ikuai-bypass-guard', str(CONFIG), '-r', 'exportDomainSteamToTxt', '--exportPath', folder]
                     result = subprocess.run(command, stdout=log, stderr=log, timeout=1800)
                     if result.returncode == 0:
                         with tarfile.open(EXPORT, 'w:gz') as archive:
@@ -107,6 +107,19 @@ def main():
                 return
         raise ValueError('没有正在运行的后台任务。')
     cfg = yaml.safe_load(CONFIG.read_text(encoding='utf-8'))
+    if action == 'apps-preview':
+        from ikb_applications import preview
+        reply(True, preview(cfg))
+        return
+    if action == 'apps-diagnose':
+        from ikb_applications import diagnose
+        reply(True, diagnose(cfg))
+        return
+    if action == 'apps-sync':
+        from ikb_applications import prepare
+        prepare(cfg)
+        start('once', '')
+        return
     if action.startswith('whatsapp-'):
         from ikb_addon_whatsapp import run
         print(json.dumps(run(cfg, action), ensure_ascii=False))

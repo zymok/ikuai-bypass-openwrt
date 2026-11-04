@@ -145,6 +145,18 @@ class Guard:
 
 def run(config, args, binary='/usr/bin/ikuai-bypass'):
     cfg = yaml.safe_load(Path(config).read_text(encoding='utf-8'))
+    from ikb_applications import prepare, settings, sync_dns, sync_proxy_ports
+    original = cfg
+    cfg = prepare(cfg)
+    operation = args[args.index('-r') + 1] if '-r' in args else cfg.get('run-mode', 'cronAft')
+    if operation in ('once', 'cron', 'cronAft'):
+        if Path(config).resolve() == Path('/etc/ikuai-bypass/config.yml'):
+            print('[APPS:PROXY] ' + sync_proxy_ports(original), flush=True)
+            print('[APPS:DNS] ' + sync_dns(original), flush=True)
+        elif settings(original).get('dns-enabled') or settings(original).get('passwall2-tcp-all'):
+            raise ValueError('Local network management requires the installed canonical config path')
+    if settings(original).get('telegram-enabled') or settings(original).get('chatgpt-enabled'):
+        print('[APPS:MODE] ' + original.get('mode', 'ispdomain') + ' -> ' + cfg['mode'], flush=True)
     with Guard(cfg) as guard, tempfile.TemporaryDirectory(prefix='ikuai-bypass-guard-') as folder:
         path = Path(folder) / 'config.yml'
         path.write_text(yaml.safe_dump(guard.configuration(), allow_unicode=True, sort_keys=False), encoding='utf-8')

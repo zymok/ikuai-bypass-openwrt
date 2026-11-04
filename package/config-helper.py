@@ -8,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'ikuai-bypass-python'))
 import yaml
 from ruamel.yaml import YAML
+from ruamel.yaml.comments import CommentedMap
 
 CONFIG = Path('/etc/ikuai-bypass/config.yml')
 SCHEMA = Path('/usr/share/ikuai-bypass/schema.json')
@@ -131,7 +132,12 @@ def main():
             parts = path.split('.')
             for part in parts[:-1]:
                 if part not in target:
-                    target[part] = {}
+                    if hasattr(target, 'insert'):
+                        target.insert(0, part, CommentedMap())
+                    else:
+                        target[part] = CommentedMap()
+                if not isinstance(target[part], dict):
+                    raise ValueError('Setting parent must be a mapping: ' + part)
                 target = target[part]
             target[parts[-1]] = value
             changed = True
@@ -195,8 +201,9 @@ def main():
     write_config(updated, req['original'])
     print(json.dumps({'ok': True}))
 
-try:
-    main()
-except Exception as error:
-    print(json.dumps({'ok': False, 'error': str(error)}))
-    sys.exit(1)
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as error:
+        print(json.dumps({'ok': False, 'error': str(error)}))
+        sys.exit(1)

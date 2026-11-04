@@ -180,6 +180,89 @@
       "default": "",
       "help": "Android 私人 DNS 必须明确选择关闭；自动模式可能绕过域名分流。",
       "tab": "addons"
+    },
+    {
+      "path": "openwrt-addons.applications.telegram-enabled",
+      "label": "启用 Telegram 完整 IPv4 分流",
+      "default": false,
+      "help": "生成 TGClient IP 订阅与不限通讯端口的爱快分流规则，覆盖客户端直接连接服务器 IP 的情况。",
+      "tab": "applications",
+      "type": "bool"
+    },
+    {
+      "path": "openwrt-addons.applications.chatgpt-enabled",
+      "label": "启用 ChatGPT 域名补全",
+      "default": false,
+      "help": "生成 ChatGPT 域名规则，覆盖登录、静态资源及连接所需域名。",
+      "tab": "applications",
+      "type": "bool"
+    },
+    {
+      "path": "openwrt-addons.applications.anchor-tag",
+      "label": "应用出口和源范围跟随",
+      "default": "gfw",
+      "help": "自动读取所选域名规则的 WAN、源地址或源 IP 分组。修改后保存并重启服务。",
+      "tab": "applications"
+    },
+    {
+      "path": "openwrt-addons.applications.telegram-url",
+      "label": "Telegram IP 订阅链接",
+      "default": "https://core.telegram.org/resources/cidr.txt",
+      "help": "官方双栈 CIDR 列表，本功能取 IPv4；空列表或下载失败保留旧分组。",
+      "tab": "applications"
+    },
+    {
+      "path": "openwrt-addons.applications.chatgpt-url",
+      "label": "ChatGPT 域名订阅链接",
+      "default": "https://raw.githubusercontent.com/zymok/ikuai-bypass-openwrt/main/rules/chatgpt-domain-list.txt",
+      "help": "默认基于 OpenAI 官方网络建议维护，可改为自己的纯文本链接。",
+      "tab": "applications"
+    },
+    {
+      "path": "openwrt-addons.applications.dns-enabled",
+      "label": "启用 DNS 入口防泄漏",
+      "default": false,
+      "help": "将进入下面防火墙区域的 TCP/UDP 53 请求转至本机 LAN 地址的 DNS 服务。不修改爱快全局 DNS 或 DHCP DNS。",
+      "tab": "applications",
+      "type": "bool"
+    },
+    {
+      "path": "openwrt-addons.applications.dns-zone",
+      "label": "DNS 请求来源防火墙区域",
+      "default": "lan",
+      "help": "通常为 lan，仅处理进入此 OpenWrt 区域的流量；本机解析必须先正常工作。",
+      "tab": "applications"
+    },
+    {
+      "path": "openwrt-addons.applications.dns-port",
+      "label": "本机 DNS 服务端口",
+      "default": 53,
+      "help": "目标地址自动读取本机 LAN 地址。默认 53，可按本机实际监听端口修改。",
+      "tab": "applications",
+      "type": "int"
+    },
+    {
+      "path": "openwrt-addons.applications.passwall2-tcp-all",
+      "label": "管理 PassWall2 全 TCP 端口",
+      "default": false,
+      "help": "仅适用于已启用的 PassWall2；设为 1:65535，覆盖送到旁路由的非标准端口。关闭后恢复接管前列表。",
+      "tab": "applications",
+      "type": "bool"
+    },
+    {
+      "path": "openwrt-addons.applications.adopt-existing",
+      "label": "接管已有同名应用配置和 DNS 规则",
+      "default": false,
+      "help": "已有 TGClient／ChatGPT 配置时先预览再接管。同名 IKB-LAN-DNS-Guard 接管后，关闭 DNS 保护会移除此规则。",
+      "tab": "applications",
+      "type": "bool"
+    },
+    {
+      "path": "openwrt-addons.applications.diagnostic-ip",
+      "label": "诊断终端 IPv4 地址",
+      "default": "",
+      "help": "填写测试手机或电脑 IP，保存后诊断 Telegram、ChatGPT 及 DoT/853 连接。",
+      "tab": "applications"
     }
   ],
   "groups": [
