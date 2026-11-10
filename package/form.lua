@@ -15,6 +15,7 @@ section.cfgvalue = function() return true end
 section:tab('basic', '基本设置')
 section:tab('advanced', '代理与高级参数')
 section:tab('runtime', '运行与日志')
+section:tab('notifications', '微信推送', '使用 Server 酱 Turbo 已配置的微信通道。先保存 SendKey，再发送测试通知。保存后重启服务，让定时任务读取新设置。')
 section:tab('applications', 'Telegram / ChatGPT', '默认关闭。先保存设置并预览，停止定时服务后立即同步，再启动服务。应用规则在运行时生成并随计划更新，不会覆盖普通规则表单或启用未选模块的示例规则。关闭应用开关不会自动删除已同步的爱快规则；可在运行与日志按 TGClient／ChatGPT 清理。')
 section:tab('addons', 'WhatsApp 附加功能', '跟随域名规则的出口与源地址组。先保存设置，再预览或同步。Android 私人 DNS 请明确选择关闭；不自动修改终端设置。')
 section:tab('yaml', '完整 YAML')
@@ -183,6 +184,10 @@ for _, entry in ipairs({{'login', '测试爱快登录'}, {'proxy', '测试规则
     operations[entry[1]] = button
 end
 local clean_tag = section:taboption('runtime', Value, '_clean_tag', '要清理的规则标识')
+local test_push = section:taboption('notifications', Button, '_op_serverchan-test', '发送测试通知')
+test_push.inputtitle = '发送测试通知'
+test_push.write = function() return true end
+operations['serverchan-test'] = test_push
 clean_tag.description = '填写要清理的 tag；填写 cleanAll 表示清理本工具管理的全部规则。'
 local clean_confirm = section:taboption('runtime', Flag, '_clean_confirm', '确认从爱快删除指定规则')
 local clean_button = section:taboption('runtime', Button, '_op_clean', '执行清理')

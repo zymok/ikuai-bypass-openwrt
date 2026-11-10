@@ -107,6 +107,11 @@ def main():
                 return
         raise ValueError('没有正在运行的后台任务。')
     cfg = yaml.safe_load(CONFIG.read_text(encoding='utf-8'))
+    if action == 'serverchan-test':
+        from ikb_serverchan import send, title_for
+        send(cfg, title_for(cfg, '微信推送测试'), 'Server 酱已收到来自 OpenWrt 的测试请求。')
+        reply(True, 'Server 酱已受理测试通知，请在微信确认收件。')
+        return
     if action == 'apps-preview':
         from ikb_applications import preview
         reply(True, preview(cfg))

@@ -1,6 +1,29 @@
 {
   "settings": [
     {
+      "path": "serverchan.enabled",
+      "tab": "notifications",
+      "label": "更新结果微信推送",
+      "type": "bool",
+      "default": false,
+      "help": "开启后，每轮规则更新结束时发送成功或失败通知。"
+    },
+    {
+      "path": "serverchan.title",
+      "tab": "notifications",
+      "label": "推送标题",
+      "default": "",
+      "help": "例如「家里主路由」，通知标题为「家里主路由 · ikuaibypass 规则更新成功」。"
+    },
+    {
+      "path": "serverchan.send-key",
+      "tab": "notifications",
+      "label": "Server 酱 Turbo SendKey",
+      "default": "",
+      "secret": true,
+      "help": "填写以 SCT 开头的 SendKey。先保存，再发送测试通知。"
+    },
+    {
       "path": "AddErrRetryWait",
       "label": "失败重试间隔",
       "default": "10s",

@@ -16,6 +16,7 @@ import yaml
 
 LIMIT = 32 * 1024 * 1024
 RUN_LOCK = Path('/tmp/ikuai-bypass-run.lock')
+CONFIG = Path('/etc/ikuai-bypass/config.yml')
 
 
 def running():
@@ -155,7 +156,7 @@ class Guard:
 
 
 def run(config, args, binary='/usr/bin/ikuai-bypass'):
-    if Path(config).resolve() == Path('/etc/ikuai-bypass/config.yml'):
+    if Path(config).resolve() == CONFIG:
         import fcntl
         with RUN_LOCK.open('a') as lock:
             try:
@@ -168,12 +169,29 @@ def run(config, args, binary='/usr/bin/ikuai-bypass'):
 
 def _run(config, args, binary):
     cfg = yaml.safe_load(Path(config).read_text(encoding='utf-8'))
+    operation = args[args.index('-r') + 1] if '-r' in args else cfg.get('run-mode', 'cronAft')
+    from ikb_serverchan import notify, settings
+    scheduled = operation in ('cron', 'cronAft')
+    notifications = (
+        Path(config).resolve() == CONFIG
+        and (scheduled or operation in ('once', 'nocron', '1'))
+        and isinstance(settings(cfg), dict)
+        and settings(cfg).get('enabled') is True
+    )
+    try:
+        return _run_core(config, args, binary, cfg, operation, notifications, scheduled)
+    except Exception:
+        if notifications:
+            notify(cfg, False, '更新任务异常退出，请查看 OpenWrt 更新日志。')
+        raise
+
+
+def _run_core(config, args, binary, cfg, operation, notifications, scheduled):
     from ikb_applications import prepare, settings, sync_dns, sync_proxy_ports
     original = cfg
     cfg = prepare(cfg)
-    operation = args[args.index('-r') + 1] if '-r' in args else cfg.get('run-mode', 'cronAft')
     if operation in ('once', 'cron', 'cronAft'):
-        if Path(config).resolve() == Path('/etc/ikuai-bypass/config.yml'):
+        if Path(config).resolve() == CONFIG:
             print('[APPS:PROXY] ' + sync_proxy_ports(original), flush=True)
             print('[APPS:DNS] ' + sync_dns(original), flush=True)
         elif settings(original).get('dns-enabled') or settings(original).get('passwall2-tcp-all'):
@@ -182,20 +200,42 @@ def _run(config, args, binary):
         print('[APPS:MODE] ' + original.get('mode', 'ispdomain') + ' -> ' + cfg['mode'], flush=True)
     with Guard(cfg) as guard, tempfile.TemporaryDirectory(prefix='ikuai-bypass-guard-') as folder:
         path = Path(folder) / 'config.yml'
-        path.write_text(yaml.safe_dump(guard.configuration(), allow_unicode=True, sort_keys=False), encoding='utf-8')
+        staged = guard.configuration()
+        staged.pop('serverchan', None)
+        path.write_text(yaml.safe_dump(staged, allow_unicode=True, sort_keys=False), encoding='utf-8')
         path.chmod(0o600)
         env = dict(os.environ)
         for key in ('NO_PROXY', 'no_proxy'):
             env[key] = ','.join(filter(None, [env.get(key, ''), '127.0.0.1', 'localhost']))
-        child = subprocess.Popen([binary, '-c', str(path)] + args, env=env)
+        child = subprocess.Popen(
+            [binary, '-c', str(path)] + args,
+            env=env,
+            stdout=subprocess.PIPE if notifications else None,
+            stderr=subprocess.STDOUT if notifications else None,
+            text=notifications,
+            encoding='utf-8' if notifications else None,
+            errors='replace' if notifications else None,
+        )
         previous = {}
+        stopped = False
         def stop(signum, frame):
+            nonlocal stopped
+            stopped = True
             if child.poll() is None:
                 child.send_signal(signum)
         for signum in (signal.SIGTERM, signal.SIGINT):
             previous[signum] = signal.signal(signum, stop)
         try:
+            if notifications:
+                from ikb_serverchan import UpdateResults
+                results = UpdateResults(original, guard, scheduled)
+                with child.stdout:
+                    for line in child.stdout:
+                        print(line, end='', flush=True)
+                        results.observe(line)
             code = child.wait()
+            if notifications and not stopped:
+                results.finish(code)
         finally:
             for signum, handler in previous.items():
                 signal.signal(signum, handler)

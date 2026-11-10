@@ -67,6 +67,9 @@ def parse(raw):
         value = get_value(data, spec['path'], None)
         if value is not None:
             typed(value, spec)
+    if 'serverchan' in data:
+        from ikb_serverchan import validate
+        validate(data)
     return data, document, parser
 
 def check_rule(row, definition):
