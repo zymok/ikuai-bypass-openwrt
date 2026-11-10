@@ -18,9 +18,9 @@ cat /etc/openwrt_release
 
 ```sh
 cd /tmp
-sha256sum -c luci-app-ikuai-bypass_4.4.110-10_x86_64.ipk.sha256
+sha256sum -c luci-app-ikuai-bypass_4.4.110-13_x86_64.ipk.sha256
 opkg update
-opkg install ./luci-app-ikuai-bypass_4.4.110-10_x86_64.ipk
+opkg install ./luci-app-ikuai-bypass_4.4.110-13_x86_64.ipk
 ```
 
 刷新 LuCI，进入“服务 → iKuai Bypass”。未出现菜单时退出 LuCI 后重新登录。初始服务和自启关闭，密码为空，上游独立 WebUI 默认关闭。
@@ -33,7 +33,7 @@ opkg install ./luci-app-ikuai-bypass_4.4.110-10_x86_64.ipk
 
 ```sh
 /etc/init.d/ikuai-bypass stop
-opkg install /tmp/luci-app-ikuai-bypass_4.4.110-10_x86_64.ipk
+opkg install /tmp/luci-app-ikuai-bypass_4.4.110-13_x86_64.ipk
 ```
 
 `/etc/ikuai-bypass/config.yml` 是 conffile，正常升级保留原文件。出现 `.yml-opkg` 提示表示新默认配置另存，不要直接覆盖自己的配置。新增表单字段会显示默认值。
@@ -64,3 +64,5 @@ opkg remove luci-app-ikuai-bypass
 ## Telegram / ChatGPT 新功能
 
 4.4.110-10 新增应用增强页，升级不会自动开启。按 [应用增强说明](applications.md) 选择跟随规则和所需开关，保存、预览、停止服务、立即同步，再启动定时服务。备份时保留应用网络状态文件；卸载前如需恢复端口或移除本机 DNS 保护，先关闭相应开关并同步。
+
+从 4.4.110-13 起，失败通知附错误日志摘录。覆盖升级会保留已配置的 SendKey 与推送标题。首次启用见 [微信推送指南](serverchan.md)。
